@@ -6,12 +6,6 @@ from script_to_join_to_bot import TOKEN
 app = Flask(__name__)
 
 
-# Create a /sanity route that returns "Server is running" message
-@app.route('/sanity')
-def sanity_check():
-    return "Server is running"
-
-
 @app.route('/message', methods=["POST"])
 def handle_message():
     print("got message")
