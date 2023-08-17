@@ -11,6 +11,7 @@ import asyncio
 from user_data_management import is_user_exists, create_new_user, is_user_data_empty, is_all_user_data_provided, is_user_data_confirmed, is_user_want_change_data, getUserContentFormat, getMissingParameters
 
 
+
 OPENING_STATEMENT = """
 🌱 Welcome to CropLocatorBot! 🌾
 
