@@ -2,12 +2,13 @@
     {
         "id": "1",
         "data": {
-            "soilTemperature": "3",
-            "soilMoisture": "4",
+            "soilTemperature": "1",
+            "soilMoisture": "1",
             "pressure": "1",
             "currentSpeed": "1"
         },
-        "isDataConfirmed": true
+        "isDataConfirmed": true,
+        "userAskToChange": false
     },
     {
         "id": "2",
@@ -19,5 +20,39 @@
         },
         "isDataConfirmed": false,
         "userAskToChange": false
+    },
+    {
+        "id": "3",
+        "data": {
+            "soilTemperature": null,
+            "soilMoisture": null,
+            "pressure": null,
+            "currentSpeed": null
+        },
+        "isDataConfirmed": false,
+        "userAskToChange": false
+    },
+    {
+        "id": "4",
+        "data": {
+            "soilTemperature": null,
+            "soilMoisture": null,
+            "pressure": null,
+            "currentSpeed": null
+        },
+        "isDataConfirmed": false,
+        "userAskToChange": false
+    },
+    {
+        "id": "5",
+        "data": {
+            "soilTemperature": "4",
+            "soilMoisture": "2",
+            "pressure": "5",
+            "currentSpeed": "3"
+        },
+        "isDataConfirmed": true,
+        "userAskToChange": false
     }
 ]
+

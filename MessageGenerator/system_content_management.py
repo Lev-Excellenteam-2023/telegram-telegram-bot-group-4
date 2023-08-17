@@ -1,5 +1,5 @@
 import asyncio
-from user_data_management import is_user_exists, create_new_user, is_user_data_empty, is_all_user_data_provided, is_user_data_confirmed, is_user_want_change_data
+from user_data_management import is_user_exists, create_new_user, is_user_data_empty, is_all_user_data_provided, is_user_data_confirmed, is_user_want_change_data, getUserContentFormat, getMissingParameters
 
 
 OPENING_STATEMENT = """
@@ -12,13 +12,11 @@ Let me assist you in identifying the most suitable regions based on various envi
 """
 
 
-GENERAL_SYSTEM_CONTENT = "You are a Telegram bot that helps a user (who is a farmer) find areas for crops."
+GENERAL_SYSTEM_CONTENT = "You are a Telegram bot that helps a user (who is a farmer) find areas for crops. dont introduce you (You introduced you in the past)."
 
-ASK_FOR_ALL_DATA = GENERAL_SYSTEM_CONTENT + "Tell the user to provide all the data that you need from him. the data tou need from the user are: soilTemperature, soilMoisture, pressure, currentSpeed."
+ASK_FOR_ALL_DATA = GENERAL_SYSTEM_CONTENT + "dont introduce you (You introduced you in the past). Tell the user to provide these parameters. the data tou need from the user are: soilTemperature, soilMoisture, pressure, currentSpeed."
 
 ASK_FOR_DATA = GENERAL_SYSTEM_CONTENT + "So far the user has provided these data: "
-# a function to get the data that the user provided so far.
-# .. if the user provided in the last message a new data. thank him for providing the data, Tell him what data he has provided so far and ask him for providing the data he does not provided.
 
 RESPONSE_TO_NONSENSE = GENERAL_SYSTEM_CONTENT + "The user start the message with a nonsense word. Respond according to his last message in a humorous way. next, ask him if he want we help him to find areas for crops. "
 
@@ -53,7 +51,7 @@ async def get_system_content(user_id: str) -> str:
 
     # case the user not provided all the data.
     if not await is_all_user_data_provided(user_id):
-        return ASK_FOR_DATA
+        return ASK_FOR_DATA + await getUserContentFormat(user_id) + "Tell the user to provide these data: " + str(getMissingParameters(user_id) + ". if the last message of the user is a new data, thank him for providing the data, Tell him what data he has provided so far and ask him for providing the data he does not provided.")
 
     # case the user provided all the data.
     if await is_all_user_data_provided(user_id) and not await is_user_want_change_data(user_id):

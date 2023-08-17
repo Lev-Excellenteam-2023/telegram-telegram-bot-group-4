@@ -316,6 +316,28 @@ async def check_user_answer_for_confirm_data(user_id: str, user_message: str) ->
     return False
 
 
+async def change_the_confirmation_to_true(user_id: str) -> None:
+    """
+    @summary:
+        Change the confirmation of the user to True.
+    @param user_id:
+        The ID of the user that we want to change.
+    """
+    async with aiofiles.open("UserData.json", "r") as file:
+        users_data = json.loads(await file.read())
+
+    user_entry = next((entry for entry in users_data if entry["id"] == user_id), None)
+
+    if user_entry is None:
+        raise ValueError(f"No user found with ID {user_id}")
+
+    user_entry["isDataConfirmed"] = True
+
+    async with aiofiles.open("UserData.json", "w") as file:
+        await file.write(json.dumps(users_data, indent=4))
+
+
+
 async def is_user_want_change_data(user_id: str) -> bool:
     """
     @summary:
