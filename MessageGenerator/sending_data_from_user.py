@@ -5,11 +5,12 @@ from dotenv import load_dotenv
 from user_data_management import getUserContentFormat, extractingData, updateUserData, is_user_exists, delete_user, \
     is_user_data_confirmed, is_user_want_change_data, is_user_data_empty, is_all_user_data_provided, \
     getMissingParameters, create_new_user, getExistingParameters, reset_user_data, check_user_answer_for_confirm_data, \
-    generateRegex, change_the_confirmation_to_true
+    generateRegex, change_the_confirmation_to_true, return_user_data
+
+from logic.search_functionalety import search_suitable_location
 
 import asyncio
 from user_data_management import is_user_exists, create_new_user, is_user_data_empty, is_all_user_data_provided, is_user_data_confirmed, is_user_want_change_data, getUserContentFormat, getMissingParameters
-
 
 
 OPENING_STATEMENT = """
@@ -93,7 +94,9 @@ async def send_message(user_message: str, user_id: str) -> str:
 
     # case the user confirmed the data.
     elif await is_user_data_confirmed(user_id):
-        SYSTEM_CONTENT = RESPONSE_TO_CONFIRMATION
+        userdata = await return_user_data(user_id)
+        suitable_locations = await search_suitable_location(userdata)
+        SYSTEM_CONTENT = RESPONSE_TO_CONFIRMATION + str(suitable_locations)
 
     user_content = user_message + await getUserContentFormat(user_id)
 
@@ -118,7 +121,8 @@ async def send_message(user_message: str, user_id: str) -> str:
     bot_response = completion.choices[0]["message"]["content"]
     return bot_response
 
-
+# main:
+print(asyncio.run(send_message("hi", "5")))
 
 
 

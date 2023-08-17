@@ -2,8 +2,9 @@ import re
 import json
 import aiofiles
 import asyncio
+import os
 
-USER_DATA = os.path.join(os.path.dirname(__file__), 'UserData.json')
+USER_DATA = 'UserData.json'
 
 
 async def getMissingParameters(user_id: str) -> list:
@@ -361,4 +362,24 @@ async def is_user_want_change_data(user_id: str) -> bool:
     return user_entry["userAskToChange"]
 
 
-# print(asyncio.run(is_user_data_confirmed("2")))
+async def return_user_data(user_id: str) -> dict:
+    """
+    @summary:
+        Return the user data.
+    @param user_id:
+        The ID of the user that we want to return his data.
+    @return:
+        The user data.
+    """
+    async with aiofiles.open("UserData.json", "r") as file:
+        users_data = json.loads(await file.read())
+
+    user_entry = next((entry for entry in users_data if entry["id"] == user_id), None)
+
+    if user_entry is None:
+        raise ValueError(f"No user found with ID {user_id}")
+
+    return user_entry["data"]
+
+
+# print(asyncio.run(return_user_data("2")))

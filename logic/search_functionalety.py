@@ -4,7 +4,7 @@ this file is used to search the database with the given parameters
 import asyncio
 import logging
 from typing import Dict
-from consts import *
+from logic.consts import *
 from data_base.real_time_database import RealTimeDatabase
 
 
@@ -38,7 +38,7 @@ async def search_parameter_in_different_sources(data_base_parameter, parameter):
     try:
         if isinstance(data_base_parameter, dict):
             for source in data_base_parameter.keys():
-                if data_base_parameter[source] == parameter:
+                if data_base_parameter[source] == float(parameter):
                     return True
             return False
         else:
@@ -55,6 +55,7 @@ async def search_suitable_location(*args, **kwargs):
     :return: None
     """
     try:
+        print(kwargs)
         res = []
         db = RealTimeDatabase()
         for area in FARM_AREA:
@@ -63,3 +64,6 @@ async def search_suitable_location(*args, **kwargs):
         return res
     except Exception as e:
         logging.error(e)
+
+
+asyncio.run(search_suitable_location(humidity=0.5, temperature=0.5, light=0.5, soil_moisture=0.5))

@@ -46,13 +46,12 @@
     {
         "id": "5",
         "data": {
-            "soilTemperature": "4",
-            "soilMoisture": "2",
-            "pressure": "5",
-            "currentSpeed": "3"
+            "soilTemperature": "11.21",
+            "soilMoisture": "0.3",
+            "pressure": "1018.13",
+            "currentSpeed": "0.03"
         },
         "isDataConfirmed": true,
         "userAskToChange": false
     }
 ]
-
