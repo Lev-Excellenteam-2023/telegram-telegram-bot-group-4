@@ -18,7 +18,7 @@ configure()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
-def send_message(user_message: str) -> str:
+def send_message(user_message: str, user_id: str) -> str:
     """
     @summary:
         - Sending a message to the bot.
@@ -28,11 +28,13 @@ def send_message(user_message: str) -> str:
         - Get the response from the bot.
     @param user_message:
         The message that the user provided to the bot.
+    @param user_id:
+        The ID of the user that we want to update his data.
     @return:
         The response from the bot.
     """
     userData = extractingData(user_message)
-    updateUserData(userData)
+    updateUserData(userData, user_id)
 
     user_content = getUserContentFormat()
 
