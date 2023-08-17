@@ -18,5 +18,5 @@ async def handle_user_message(user_message: str, id:str) -> str:
     if id not in USERS_HISTORY:
         USERS_HISTORY[id] = []
     USERS_HISTORY[id].append(user_message)
-    bot_response = await send_message(user_message)
+    bot_response = send_message(user_message)
     return bot_response

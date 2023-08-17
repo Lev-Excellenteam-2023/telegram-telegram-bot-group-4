@@ -1,6 +1,8 @@
 import re
 import json
 
+USER_DATA = '/Users/alex/PycharmProjects/Telegram_bot_project_group_4/MessageGenerator/UserData.json'
+
 
 def getMissingParameters() -> list:
     """
@@ -9,7 +11,7 @@ def getMissingParameters() -> list:
     @return:
         List of the names of the parameters that the user did not provide.
     """
-    with open("UserData.json", "r") as file:
+    with open(USER_DATA , "r") as file:
         parameters = json.load(file)
     missing_parameters = []
 
@@ -26,7 +28,7 @@ def getExistingParameters() -> dict:
     @return:
         The names of the parameters and their values that the user provided.
     """
-    with open("UserData.json", "r") as file:
+    with open(USER_DATA, "r") as file:
         parameters = json.load(file)
     existing_parameters = {}
 
@@ -55,14 +57,14 @@ def updateUserData(user_data: dict) -> None:
     @param user_data:
         A dictionary that contains the names of the parameters and their values that the user provided.
     """
-    with open("UserData.json", "r") as file:
+    with open(USER_DATA, "r") as file:
         parameters = json.load(file)
 
     for key, value in user_data.items():
         if value is not None:
             parameters[key] = value
 
-    with open("UserData.json", "w") as file:
+    with open(USER_DATA, "w") as file:
         json.dump(parameters, file, indent=4)
 
 
