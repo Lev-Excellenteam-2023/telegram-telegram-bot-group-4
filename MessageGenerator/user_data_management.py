@@ -1,8 +1,9 @@
 import re
 import json
+import aiofiles
 
 
-def getMissingParameters(user_id: str) -> list:
+async def getMissingParameters(user_id: str) -> list:
     """
     @summary:
         Get all the parameters that the user with the given ID did not provide from the json file.
@@ -13,8 +14,8 @@ def getMissingParameters(user_id: str) -> list:
     @raise ValueError:
             If no user found with the provided ID.
     """
-    with open("UserData.json", "r") as file:
-        users_data = json.load(file)
+    async with aiofiles.open("UserData.json", "r") as file:
+        users_data = json.loads(await file.read())
 
     user_entry = next((entry for entry in users_data if entry["id"] == user_id), None)
 
@@ -25,7 +26,7 @@ def getMissingParameters(user_id: str) -> list:
     return missing_parameters
 
 
-def getExistingParameters(user_id: str) -> dict:
+async def getExistingParameters(user_id: str) -> dict:
     """
     @summary:
         Get all the parameters and their values that the user with the given ID provided from the json file.
@@ -36,8 +37,8 @@ def getExistingParameters(user_id: str) -> dict:
     @raise ValueError:
             If no user found with the provided ID.
     """
-    with open("UserData.json", "r") as file:
-        users_data = json.load(file)
+    async with aiofiles.open("UserData.json", "r") as file:
+        users_data = json.loads(await file.read())
 
     user_entry = next((entry for entry in users_data if entry["id"] == user_id), None)
 
@@ -60,7 +61,7 @@ def generateRegex(parameter: str) -> str:
     return parameter + "\s(\d+)"
 
 
-def updateUserData(user_data: dict, user_id: str) -> None:
+async def updateUserData(user_data: dict, user_id: str) -> None:
     """
     @summary:
         Update the json file with the new data in the provided dictionary and the provided user ID.
@@ -71,8 +72,8 @@ def updateUserData(user_data: dict, user_id: str) -> None:
     @raise ValueError:
             If no user found with the provided ID.
     """
-    with open("UserData.json", "r") as file:
-        users_data = json.load(file)
+    async with aiofiles.open("UserData.json", "r") as file:
+        users_data = json.loads(await file.read())
 
     user_entry = next((entry for entry in users_data if entry["id"] == user_id), None)
 
@@ -83,12 +84,11 @@ def updateUserData(user_data: dict, user_id: str) -> None:
         if key in user_entry["data"] and value is not None:
             user_entry["data"][key] = value
 
-    # Save the modified data back to the JSON file
-    with open("UserData.json", "w") as file:
-        json.dump(users_data, file, indent=4)
+    async with aiofiles.open("UserData.json", "w") as file:
+        await file.write(json.dumps(users_data, indent=4))
 
 
-def extractingData(user_response: str) -> dict:
+async def extractingData(user_response: str) -> dict:
     """
     @summary:
         Extract the data from the user response and return a dictionary that contains the names 
@@ -118,7 +118,7 @@ def extractingData(user_response: str) -> dict:
     return updatedUserData
 
 
-def getUserContentFormat(user_id: str) -> str:
+async def getUserContentFormat(user_id: str) -> str:
     """
     @summary:
         Get the format of the user content that we want to send to the bot.
@@ -130,14 +130,14 @@ def getUserContentFormat(user_id: str) -> str:
     @example output:
         soilTemperature is 20.  soilMoisture is 30.  pressure is 40.  currentSpeed is 50.
     """
-    existingParameters = getExistingParameters(user_id)
+    existingParameters = await getExistingParameters(user_id)
     userContentFormat = ""
     for key, value in existingParameters.items():
         userContentFormat += key + " is " + value + ".  "
     return userContentFormat
 
 
-def reset_user_data(user_id: str) -> None:
+async def reset_user_data(user_id: str) -> None:
     """
     @summary:
         Reset the user data in the json file.
@@ -146,59 +146,59 @@ def reset_user_data(user_id: str) -> None:
     @raise ValueError:
             If no user found with the provided ID.
     """
-    with open("UserData.json", "r") as file:
-        users_data = json.load(file)
+    async with aiofiles.open("UserData.json", "r") as file:
+        users_data = json.loads(await file.read())
 
     user_entry = next((entry for entry in users_data if entry["id"] == user_id), None)
 
     if user_entry is None:
         raise ValueError(f"No user found with ID {user_id}")
 
-    for key, value in user_entry["data"].items():
+    for key in user_entry["data"].keys():
         user_entry["data"][key] = None
 
-    # Save the modified data back to the JSON file
-    with open("UserData.json", "w") as file:
-        json.dump(users_data, file, indent=4)
+    async with aiofiles.open("UserData.json", "w") as file:
+        await file.write(json.dumps(users_data, indent=4))
 
 
-def create_new_user(new_user_id: str):
+async def create_new_user(new_user_id: str):
     """
     @summary:
         Create new user in the json file.
     @param new_user_id:
         The ID of the new user that we want to create.
     """
-    with open("UserData.json", "r") as file:
-        users_data = json.load(file)
+    async with aiofiles.open("UserData.json", "r") as file:
+        users_data = json.loads(await file.read())
 
-        # check if the user already exists:
-        user_entry = next((entry for entry in users_data if entry["id"] == new_user_id), None)
-        if user_entry is not None:
-            return
-        # create new user:
-        new_user = {"id": new_user_id, "data": {
+    user_entry = next((entry for entry in users_data if entry["id"] == new_user_id), None)
+    if user_entry is not None:
+        return
+
+    new_user = {
+        "id": new_user_id,
+        "data": {
             "soilTemperature": None,
             "soilMoisture": None,
             "pressure": None,
             "currentSpeed": None
-        }}
-        users_data.append(new_user)
+        }
+    }
+    users_data.append(new_user)
 
-        # Save the modified data back to the JSON file
-        with open("UserData.json", "w") as file:
-            json.dump(users_data, file, indent=4)
+    async with aiofiles.open("UserData.json", "w") as file:
+        await file.write(json.dumps(users_data, indent=4))
 
 
-def delete_user(user_id: str) -> None:
+async def delete_user(user_id: str) -> None:
     """
     @summary:
         Delete the user from the users data file.
     @param user_id:
         The ID of the user that we want to delete.
     """
-    with open("UserData.json", "r") as file:
-        users_data = json.load(file)
+    async with aiofiles.open("UserData.json", "r") as file:
+        users_data = json.loads(await file.read())
 
     user_entry = next((entry for entry in users_data if entry["id"] == user_id), None)
 
@@ -207,7 +207,5 @@ def delete_user(user_id: str) -> None:
 
     users_data.remove(user_entry)
 
-    # Save the modified data back to the JSON file
-    with open("UserData.json", "w") as file:
-        json.dump(users_data, file, indent=4)
-
+    async with aiofiles.open("UserData.json", "w") as file:
+        await file.write(json.dumps(users_data, indent=4))
