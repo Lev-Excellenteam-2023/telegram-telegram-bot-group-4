@@ -1,1 +1,1 @@
-from data_base.real_time_database import RealTimeDatabase
+from real_time_database import RealTimeDatabase
