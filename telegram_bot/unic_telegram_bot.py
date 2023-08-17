@@ -1,6 +1,6 @@
 import telegram.ext
 from telegram import Update
-from main_app import message_handler
+from main_app.message_handler import handle_user_message
 
 TOKEN = '6463124467:AAFtqwsJ-yIiM0ZTsEv48l9Pl9XcqDv5JoM'
 
@@ -27,8 +27,9 @@ async def start(update, context):
 
 # Handler for any text message
 async def message_handler(update, context):
-    user_id = str(update.message.from_user.id)
-    response = await message_handler(update.message.text, user_id)
+    user_id = update.message.from_user.id
+    print(user_id)
+    response = await handle_user_message(update.message.text, user_id)
     await update.message.reply_text(response)
 
 
