@@ -2,8 +2,8 @@
     {
         "id": "1",
         "data": {
-            "soilTemperature": null,
-            "soilMoisture": null,
+            "soilTemperature": "3",
+            "soilMoisture": "4",
             "pressure": null,
             "currentSpeed": null
         }

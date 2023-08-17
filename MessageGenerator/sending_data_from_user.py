@@ -36,7 +36,7 @@ def send_message(user_message: str, user_id: str) -> str:
     userData = extractingData(user_message)
     updateUserData(userData, user_id)
 
-    user_content = getUserContentFormat()
+    user_content = getUserContentFormat(user_id)
 
     completion = openai.ChatCompletion.create(
         model = "gpt-3.5-turbo",
@@ -53,6 +53,5 @@ def send_message(user_message: str, user_id: str) -> str:
     )
     bot_response = completion.choices[0]["message"]["content"]
     return bot_response
-
 
 

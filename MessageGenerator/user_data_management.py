@@ -211,5 +211,3 @@ def delete_user(user_id: str) -> None:
     with open("UserData.json", "w") as file:
         json.dump(users_data, file, indent=4)
 
-
-delete_user("3")
