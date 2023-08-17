@@ -1,6 +1,6 @@
 import firebase_admin
 from firebase_admin import db, credentials
-from consts import DATA_BASE_URL, CERTIFICATE_PATH
+from data_base.consts import DATA_BASE_URL, CERTIFICATE_PATH
 
 
 class RealTimeDatabase:

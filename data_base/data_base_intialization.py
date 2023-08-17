@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-from consts import FARM_AREA
+from data_base.consts import FARM_AREA
 
 """
 this file is used to store initial data in database
