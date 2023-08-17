@@ -2,7 +2,6 @@ import os
 import openai
 import asyncio
 from dotenv import load_dotenv
-from retrying import retry
 from user_data_management import getUserContentFormat, extractingData, updateUserData
 
 
@@ -55,6 +54,18 @@ async def send_message(user_message: str, user_id: str) -> str:
     bot_response = completion.choices[0]["message"]["content"]
     return bot_response
 
+
+async def main() -> None:
+    # """Send a message to the bot and print the response."""
+    # user_message = input("Enter your message: ")
+    # user_id = input("Enter your ID: ")
+    # bot_response = await send_message(user_message, user_id)
+    # print(bot_response)
+    print("111")
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
 
 
 

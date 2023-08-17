@@ -1,6 +1,7 @@
 import re
 import json
 import aiofiles
+import asyncio
 
 
 async def getMissingParameters(user_id: str) -> list:
@@ -182,7 +183,9 @@ async def create_new_user(new_user_id: str):
             "soilMoisture": None,
             "pressure": None,
             "currentSpeed": None
-        }
+        },
+        "isDataConfirmed": False,
+        "userAskToChange": False
     }
     users_data.append(new_user)
 
@@ -209,3 +212,128 @@ async def delete_user(user_id: str) -> None:
 
     async with aiofiles.open("UserData.json", "w") as file:
         await file.write(json.dumps(users_data, indent=4))
+
+
+async def is_user_exists(user_id: str) -> bool:
+    """
+    @summary:
+        Check if the user exists in the users data file.
+    @param user_id:
+        The ID of the user that we want to check.
+    @return:
+        True if the user exists in the users data file, False otherwise.
+    """
+    async with aiofiles.open("UserData.json", "r") as file:
+        users_data = json.loads(await file.read())
+
+    user_entry = next((entry for entry in users_data if entry["id"] == user_id), None)
+
+    return user_entry is not None
+
+
+async def is_user_data_empty(user_id: str) -> bool:
+    """
+    @summary:
+        Check if the user data is empty.
+    @param user_id:
+        The ID of the user that we want to check.
+    @return:
+        True if the user data is empty, False otherwise.
+    """
+    async with aiofiles.open("UserData.json", "r") as file:
+        users_data = json.loads(await file.read())
+
+    user_entry = next((entry for entry in users_data if entry["id"] == user_id), None)
+
+    if user_entry is None:
+        raise ValueError(f"No user found with ID {user_id}")
+
+    for value in user_entry["data"].values():
+        if value is not None:
+            return False
+
+    return True
+
+
+async def is_all_user_data_provided(user_id: str) -> bool:
+    """
+    @summary:
+        Check if the user provided all the data.
+    @param user_id:
+        The ID of the user that we want to check.
+    @return:
+        True if the user provided all the data, False otherwise.
+    """
+    async with aiofiles.open("UserData.json", "r") as file:
+        users_data = json.loads(await file.read())
+
+    user_entry = next((entry for entry in users_data if entry["id"] == user_id), None)
+
+    if user_entry is None:
+        raise ValueError(f"No user found with ID {user_id}")
+
+    for value in user_entry["data"].values():
+        if value is None:
+            return False
+
+    return True
+
+
+async def is_user_data_confirmed(user_id: str) -> bool:
+    """
+    @summary:
+        Check if the user confirmed his data.
+    @param user_id:
+        The ID of the user that we want to check.
+    @return:
+        True if the user confirmed his data, False otherwise.
+    """
+    async with aiofiles.open("UserData.json", "r") as file:
+        users_data = json.loads(await file.read())
+
+    user_entry = next((entry for entry in users_data if entry["id"] == user_id), None)
+
+    if user_entry is None:
+        raise ValueError(f"No user found with ID {user_id}")
+
+    return user_entry["isDataConfirmed"]
+
+
+async def check_user_answer_for_confirm_data(user_id: str, user_message: str) -> bool:
+    """
+    @summary:
+        Check if the user confirm his data.
+    @param user_id:
+        The ID of the user that we want to check.
+    @param user_message:
+        The message that the user sent.
+    @return:
+        True if the user confirm his data, False otherwise.
+    """
+    affirmative_pattern = re.compile(r'^(yes|y|yeah|yep|affirmative|sure|ok|okay)$', re.I)
+    if affirmative_pattern.match(user_message.strip()):
+        return True
+    return False
+
+
+async def is_user_want_change_data(user_id: str) -> bool:
+    """
+    @summary:
+        Check if the user want to change his data.
+    @param user_id:
+        The ID of the user that we want to check.
+    @return:
+        True if the user want to change his data, False otherwise.
+    """
+    async with aiofiles.open("UserData.json", "r") as file:
+        users_data = json.loads(await file.read())
+
+    user_entry = next((entry for entry in users_data if entry["id"] == user_id), None)
+
+    if user_entry is None:
+        raise ValueError(f"No user found with ID {user_id}")
+
+    return user_entry["userAskToChange"]
+
+
+# print(asyncio.run(is_user_data_confirmed("2")))

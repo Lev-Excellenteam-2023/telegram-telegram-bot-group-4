@@ -4,9 +4,10 @@
         "data": {
             "soilTemperature": "3",
             "soilMoisture": "4",
-            "pressure": null,
-            "currentSpeed": null
-        }
+            "pressure": "1",
+            "currentSpeed": "1"
+        },
+        "isDataConfirmed": true
     },
     {
         "id": "2",
@@ -15,6 +16,8 @@
             "soilMoisture": null,
             "pressure": null,
             "currentSpeed": null
-        }
+        },
+        "isDataConfirmed": false,
+        "userAskToChange": false
     }
 ]
