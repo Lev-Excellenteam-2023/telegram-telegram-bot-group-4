@@ -1,5 +1,6 @@
 import os
 import openai
+import asyncio
 from dotenv import load_dotenv
 from retrying import retry
 from MessageGenerator.user_data_management import getUserContentFormat, extractingData, updateUserData
@@ -18,7 +19,7 @@ configure()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
-def send_message(user_message: str) -> str:
+async def send_message(user_message: str, user_id: str) -> str:
     """
     @summary:
         - Sending a message to the bot.
@@ -28,29 +29,33 @@ def send_message(user_message: str) -> str:
         - Get the response from the bot.
     @param user_message:
         The message that the user provided to the bot.
+    @param user_id:
+        The ID of the user that we want to update his data.
     @return:
         The response from the bot.
     """
-    userData = extractingData(user_message)
-    updateUserData(userData)
+    userData = await extractingData(user_message)
+    await updateUserData(userData, user_id)
 
-    user_content = getUserContentFormat()
+    user_content = await getUserContentFormat(user_id)
 
     completion = openai.ChatCompletion.create(
-        model = "gpt-3.5-turbo",
-        messages = [
-        {
-            "role": "system",
-            "content": SYSTEM_CONTENT
-        },
-        {
-            "role": "user",
-            "content": user_content
-        }
-    ]
+        model="gpt-3.5-turbo",
+        messages=[
+            {
+                "role": "system",
+                "content": SYSTEM_CONTENT
+            },
+            {
+                "role": "user",
+                "content": user_content
+            }
+        ]
     )
     bot_response = completion.choices[0]["message"]["content"]
     return bot_response
+
+
 
 
 

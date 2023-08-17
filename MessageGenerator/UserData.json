@@ -1,6 +1,20 @@
-{
-    "soilTemperature": null,
-    "soilMoisture": null,
-    "pressure": null,
-    "currentSpeed": null
-}
+[
+    {
+        "id": "1",
+        "data": {
+            "soilTemperature": "3",
+            "soilMoisture": "4",
+            "pressure": null,
+            "currentSpeed": null
+        }
+    },
+    {
+        "id": "2",
+        "data": {
+            "soilTemperature": null,
+            "soilMoisture": null,
+            "pressure": null,
+            "currentSpeed": null
+        }
+    }
+]
