@@ -2,6 +2,8 @@ import re
 import json
 import aiofiles
 
+USER_DATA = os.path.join(os.path.dirname(__file__), 'UserData.json')
+
 
 async def getMissingParameters(user_id: str) -> list:
     """
@@ -18,7 +20,6 @@ async def getMissingParameters(user_id: str) -> list:
         users_data = json.loads(await file.read())
 
     user_entry = next((entry for entry in users_data if entry["id"] == user_id), None)
-
     if user_entry is None:
         raise ValueError(f"No user found with ID {user_id}")
 
@@ -80,12 +81,14 @@ async def updateUserData(user_data: dict, user_id: str) -> None:
     if user_entry is None:
         raise ValueError(f"No user found with ID {user_id}")
 
+
     for key, value in user_data.items():
         if key in user_entry["data"] and value is not None:
             user_entry["data"][key] = value
 
     async with aiofiles.open("UserData.json", "w") as file:
         await file.write(json.dumps(users_data, indent=4))
+
 
 
 async def extractingData(user_response: str) -> dict:

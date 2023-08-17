@@ -3,7 +3,7 @@ import openai
 import asyncio
 from dotenv import load_dotenv
 from retrying import retry
-from user_data_management import getUserContentFormat, extractingData, updateUserData
+from MessageGenerator.user_data_management import getUserContentFormat, extractingData, updateUserData
 
 
 SYSTEM_CONTENT = "You are a bot on telegram that extracts 4 data from a user. the data you need from the user are: soilTemperature, soilMoisture, pressure, currentSpeed." \
