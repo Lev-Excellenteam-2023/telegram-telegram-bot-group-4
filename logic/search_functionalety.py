@@ -8,7 +8,7 @@ from consts import *
 from data_base.real_time_database import RealTimeDatabase
 
 
-async def is_suitable_location (db, area, params:Dict[str, float] ):
+async def is_suitable_location (db, area:str, params:Dict[str, float] ):
     """
     this function is used to check if the given parameters are suitable for the given area.
     :param db: database object.
@@ -28,10 +28,11 @@ async def is_suitable_location (db, area, params:Dict[str, float] ):
         logging.error(e)
 
 
-async def search_parmeter_in_different_sources(data_base_parameter, parameter):
+async def search_parameter_in_different_sources(data_base_parameter, parameter):
     """
     this function is used to search the database with the given parameters
-    :param dict: dictionary of parameters
+    :param data_base_parameter: parameter from the database
+    :param parameter: parameter to search
     :return: None
     """
     try:
